@@ -1,0 +1,45 @@
+{
+    "name": "aldavigdis/wp-tests-strapon",
+    "description": "Strap the WordPress PHPUnit tests library onto your plugin or theme with this handy Composer package.",
+    "type": "library",
+    "keywords": ["wordpress", "phpunit", "testing", "dev"],
+    "require": {
+        "composer-plugin-api": "^2.6",
+        "wordpress/wordpress": "^6.4",
+        "yoast/phpunit-polyfills": "^2.0",
+        "phpunit/phpunit": "^9.0",
+        "simoneast/simple-ansi-colors": "^1.0"
+    },
+    "require-dev": {
+        "composer/composer": "^2.7",
+        "psy/psysh": "^0.12.0",
+        "wp-coding-standards/wpcs": "^3.0",
+        "squizlabs/php_codesniffer": "^3.8"
+    },
+    "license": "No-Evil-Use",
+    "autoload": {
+        "psr-4": {
+            "Aldavigdis\\WpTestsStrapon\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Alda Vigdís Skarphéðinsdóttir",
+            "email": "aldavigdis@aldavigdis.is"
+        }
+    ],
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    },
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/WordPress/wordpress-develop/"
+        }
+    ],
+    "extra": {
+        "class": "Aldavigdis\\WpTestsStrapon\\StraponMain"
+    }
+}
