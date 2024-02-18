@@ -194,7 +194,7 @@ class Bootstrap
             '👁️'
         );
 
-        echo "\n";
+        echo PHP_EOL;
 
         if (self::configExsists() === false) {
             self::displayLine(
@@ -288,7 +288,7 @@ class Bootstrap
                 die;
             }
 
-            echo "\n";
+            echo PHP_EOL;
             self::displayLine('Extracting archive...', '🗜️');
 
             if (FetchWP::extractArchive($archive_file_path)) {
@@ -301,15 +301,16 @@ class Bootstrap
                 die;
             }
 
-            echo "\n";
+            echo PHP_EOL;
 
             self::displayLine(
-                "Installation of test environment finished!\n",
+                'Installation of test environment finished!',
                 '🥂'
             );
+            echo PHP_EOL;
         } else {
             self::displayInspiration();
-            echo "\n";
+            echo PHP_EOL;
         }
 
         self::displayLine(
