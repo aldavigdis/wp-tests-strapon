@@ -10,19 +10,25 @@ class FetchWP
 {
     public const WP_VENDOR_BASE_PATH = 'vendor/wordpress/wordpress/';
 
+    public const WP_DEV_BASE_URL = 'https://github.com/WordPress/wordpress-develop/archive/refs/heads/';
+
+    public const DEFAULT_WP_DEV_BASE_VERSION = 'trunk';
+
     public const WP_DIST_BASE_URL = 'https://github.com/WordPress/WordPress/archive/refs/tags/';
 
     public const WP_DIST_URL = 'https://github.com/WordPress/WordPress/archive/refs/heads/master.zip';
 
     public const DEFAULT_WP_VERSION = 'master';
 
-    public static function archiveUrl(string $wp_version): string
-    {
-        if (empty($wp_version) || ($wp_version === 'master')) {
+    public static function archiveUrl(
+        string $wp_version = self::DEFAULT_WP_VERSION,
+        string $base_url = self::WP_DIST_BASE_URL
+    ): string {
+        if ($wp_version === 'master') {
             return self::WP_DIST_URL;
         }
 
-        return self::WP_DIST_BASE_URL . $wp_version . '.zip';
+        return $base_url . $wp_version . '.zip';
     }
 
     public static function extractDirPath(): string
@@ -31,9 +37,10 @@ class FetchWP
     }
 
     public static function wpInstallationPath(
-        string $wp_version = 'master'
+        string $wp_version = 'master',
+        string $basename = 'WordPress'
     ): string {
-        return self::extractDirPath() . 'WordPress-' . $wp_version . '/';
+        return self::extractDirPath() . $basename . '-' . $wp_version . '/';
     }
 
     public static function archiveFilePath(): string
@@ -42,12 +49,13 @@ class FetchWP
     }
 
     public static function downloadArchive(
-        string $wp_version = 'master'
+        string $wp_version = 'master',
+        string $base_url = self::WP_DIST_BASE_URL
     ): string|false {
         $file_path = self::archiveFilePath();
         $curl      = curl_init();
 
-        curl_setopt($curl, CURLOPT_URL, self::archiveUrl($wp_version));
+        curl_setopt($curl, CURLOPT_URL, self::archiveUrl($wp_version, $base_url));
         curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
@@ -91,8 +99,10 @@ class FetchWP
         return true;
     }
 
-    public static function isInstalled(string $wp_version): bool
-    {
-        return is_dir(self::wpInstallationPath($wp_version));
+    public static function isInstalled(
+        string $wp_version,
+        string $basename = 'WordPress'
+    ): bool {
+        return is_dir(self::wpInstallationPath($wp_version, $basename));
     }
 }

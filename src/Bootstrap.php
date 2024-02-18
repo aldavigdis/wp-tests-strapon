@@ -196,7 +196,7 @@ class Bootstrap
 
         echo "\n";
 
-        if (self::configExsists($wp_version) === false) {
+        if (self::configExsists() === false) {
             self::displayLine(
                 'A test config file for the WordPress test environment was ' .
                 'not found.',
@@ -207,8 +207,8 @@ class Bootstrap
                 $path = Config::path();
                 self::displayLine("A fresh config was saved to '$path'.");
                 self::displayLine(
-                    'The configuration parameters are based on environment ' .
-                    'variables.',
+                    'The configuration parameters in the config file are ' .
+                    'based on environment variables.',
                     '🖖'
                 );
                 self::displayLine(
@@ -220,8 +220,50 @@ class Bootstrap
                     'Read all about it in the WP-Tests-Strapon readme file.',
                     '📃'
                 );
-                echo "\n";
+                echo PHP_EOL;
             }
+        }
+
+        if (FetchWP::isInstalled('develop-trunk', 'wordpress') === false) {
+            self::displayLine(
+                'A WordPress develop-drunk environment was not found.',
+                '❓'
+            );
+
+            self::displayLine(
+                'Downloading and installing the WordPress-develop-trunk ' .
+                'environment...',
+                '💻'
+            );
+
+            $trunk_file_path = FetchWP::downloadArchive(
+                FetchWP::DEFAULT_WP_DEV_BASE_VERSION,
+                FetchWP::WP_DEV_BASE_URL
+            );
+
+            if (is_string($trunk_file_path) === true) {
+                self::displayLine('Done!');
+            } else {
+                self::displayLine(
+                    'Sorry! Could not download this WordPress-develop-trunk.',
+                    '👎'
+                ) ;
+                die;
+            }
+
+            self::displayLine('Extracting archive...', '🗜️');
+
+            if (FetchWP::extractArchive($trunk_file_path)) {
+                self::displayLine('Done!');
+            } else {
+                self::displayLine(
+                    'Sorry! Could not extract the archive.',
+                    '👎'
+                );
+                die;
+            }
+
+            echo PHP_EOL;
         }
 
         if (FetchWP::isInstalled($wp_version) === false) {

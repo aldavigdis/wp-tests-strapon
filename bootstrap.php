@@ -1,6 +1,9 @@
 <?php
 
-require dirname(__FILE__) . '/vendor/autoload.php';
+require 'vendor/autoload.php';
+
+use Aldavigdis\WpTestsStrapon\Bootstrap;
+use Aldavigdis\WpTestsStrapon\FetchWP;
 
 if (getenv('WP_VERSION') === false) {
     putenv('WP_VERSION=master');
@@ -13,7 +16,8 @@ if (defined('WP_TESTS_CONFIG_FILE_PATH') === false) {
     );
 }
 
-Aldavigdis\WpTestsStrapon\Bootstrap::init(getenv('WP_VERSION'));
+Bootstrap::init(getenv('WP_VERSION'));
 
-require getcwd() . '/vendor/wordpress/wordpress/tests/phpunit/includes/functions.php';
-require getcwd() . '/vendor/wordpress/wordpress/tests/phpunit/includes/bootstrap.php';
+require FetchWP::extractDirPath() . 'wordpress-develop-trunk/tests/phpunit/includes/functions.php';
+
+require FetchWP::extractDirPath() . 'wordpress-develop-trunk/tests/phpunit/includes/bootstrap.php';
