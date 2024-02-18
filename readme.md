@@ -49,11 +49,12 @@ Alternatively, you can include or require ``vendor/aldavigdis/wp-tests-strapon/b
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.0/phpunit.xsd"
+    xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.0/phpunit.xsd"
     cacheResult="false"
     bootstrap="vendor/aldavigdis/wp-tests-strapon/bootstrap.php"
 >
   <php>
+    <env name="DB_USER" value="test_user" />
     <env name="DB_NAME" value="myawesome_plugin_test" />
   </php>
   <testsuites>
