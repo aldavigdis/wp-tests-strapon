@@ -13,7 +13,7 @@ In essence, it has the same purpose as the `install-wp-tests.sh` shell script in
 * The test environments are downloaded and configured automatically using your PHPUnit configuration file
 * No need to re-run a script to install a development environment with the same parameters after every time you restart your computer or development environment
 
-![A screenshot of WP-Tests-Strapon, showing the test suite being prepared and run](https://github.com/aldavigdis/wp-tests-strapon/blob/main/image.jpg?raw=true)
+![A screenshot of WP-Tests-Strapon, showing the test suite being prepared and run.](https://raw.githubusercontent.com/aldavigdis/wp-tests-strapon/main/docs/images/screenshot1.png)
 
 ## Usage
 
