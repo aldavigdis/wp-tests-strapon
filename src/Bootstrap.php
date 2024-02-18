@@ -11,6 +11,7 @@ use Ansi;
 class Bootstrap
 {
     public const MIN_TERMINAL_WIDTH = 30;
+    public const DEFAULT_TERMINAL_WIDTH = 80;
     public const MAX_TERMINAL_WIDTH = 120;
 
     public const INSPIRATIONS = [
@@ -328,6 +329,7 @@ class Bootstrap
     ): int {
         $output = [];
         $result_code = 0;
+
         if (PHP_OS === 'WINNT') {
             @exec(
                 command: 'powershell -command $Host.UI.RawUI.WindowSize.Width',
@@ -340,6 +342,10 @@ class Bootstrap
                 output: $output,
                 result_code: $result_code
             );
+        }
+
+        if (intval($result_code) !== 0) {
+            return self::DEFAULT_TERMINAL_WIDTH;
         }
 
         $width = intval($output[0]);
