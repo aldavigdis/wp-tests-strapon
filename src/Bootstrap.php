@@ -203,7 +203,23 @@ class Bootstrap
                 'not found.',
                 '👀'
             );
+
             $config = new Config(wp_version: $wp_version);
+
+            if ($config->testDatabaseConnection() === true) {
+                self::displayLine(
+                    'Connection to the database was successful.'
+                );
+            } else {
+                self::displayLine(
+                    'Unable to connect to the database. Check if the ' .
+                    'database name, hostname, username or password are valid ' .
+                    'and correct.',
+                    '👎'
+                );
+                echo PHP_EOL;
+            }
+
             if ($config->save() === true) {
                 $path = Config::path();
                 self::displayLine("A fresh config was saved to '$path'.");

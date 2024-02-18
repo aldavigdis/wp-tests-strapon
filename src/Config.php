@@ -6,11 +6,17 @@ namespace Aldavigdis\WpTestsStrapon;
 
 use Aldavigdis\WpTestsStrapon\Defaults;
 use Aldavigdis\WpTestsStrapon\FetchWP;
+use mysqli;
 
 class Config
 {
     public string $config_contents;
     public string $wp_version;
+
+    public string $db_name;
+    public string $db_user;
+    public string $db_password;
+    public string $db_host;
 
     public function __construct(
         string $wp_version = Defaults::WP_VERSION,
@@ -29,6 +35,11 @@ class Config
         string $wplang = ''
     ) {
         $this->wp_version = getenv('WP_VERSION') ?: $wp_version;
+
+        $this->db_name     = getenv('DB_NAME') ?: $db_name;
+        $this->db_user     = getenv('DB_USER') ?: $db_user;
+        $this->db_password = getenv('DB_PASSWORD') ?: $db_password;
+        $this->db_host     = getenv('DB_HOST') ?: $db_host;
 
         $this->config_contents = '<?php' . "\n\n";
 
@@ -143,6 +154,26 @@ class Config
         return false;
     }
 
+    public function testDatabaseConnection()
+    {
+        try {
+            $connection = mysqli_connect(
+                hostname: $this->db_host,
+                username: $this->db_user,
+                password: $this->db_password,
+                database: $this->db_name
+            );
+        } catch (\Throwable $th) {
+            return false;
+        }
+
+        if ($connection !== false) {
+            return true;
+        }
+
+        return false;
+    }
+
     private function formatComment(string $comment)
     {
         $comment_lines = explode(PHP_EOL, $comment);
@@ -191,7 +222,7 @@ class Config
         if (is_string($comment) === true) {
             $entity = $this->formatComment($comment);
         }
-        $entity .= "define('$clean_name', $clean_value);\n\n";
+        $entity .= "define('$clean_name', $clean_value);" . PHP_EOL . PHP_EOL;
 
         return $entity;
     }
@@ -208,7 +239,7 @@ class Config
         if (is_string($comment) === true) {
             $entity = $this->formatComment($comment);
         }
-        $entity .= '$' . "$clean_name = $clean_value;\n\n";
+        $entity .= '$' . "$clean_name = $clean_value;" . PHP_EOL . PHP_EOL;
 
         return $entity;
     }
