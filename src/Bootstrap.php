@@ -16,7 +16,7 @@ class Bootstrap
     public const INSPIRATIONS = [
         [
             'emoji' => '❤️',
-            'text' => 'Take good care of yourself and those who love you!'
+            'text' => 'Take good care of yourself and those who love you.'
         ],
         [
             'emoji' => '🔪',
@@ -28,7 +28,7 @@ class Bootstrap
         ],
         [
             'emoji' => '💼',
-            'text' => 'Your productivity does not define your worth!'
+            'text' => 'Your productivity does not define your worth.'
         ],
         [
             'emoji' => '🥙',
@@ -36,7 +36,8 @@ class Bootstrap
         ],
         [
             'emoji' => '🌯',
-            'text' => 'Happiness exsists in the centre of every burrito.'
+            'text' => 'Happiness exsists in the centre of every burrito. ' .
+                      '(And also falafel, if that\'s your jam)'
         ],
         [
             'emoji' => '🦄',
@@ -66,7 +67,7 @@ class Bootstrap
         ],
         [
             'emoji' => '🌈',
-            'text' => 'Support your local LGBT+ artists and local businesses!'
+            'text' => 'Support your local LGBT+ artists and local businesses.'
         ],
         [
             'emoji' => '✊',
@@ -82,7 +83,7 @@ class Bootstrap
         ],
         [
             'emoji' => '👽',
-            'text' => 'The truth is out there.'
+            'text' => 'The truth is out there. (But it\'s probably not aliens.)'
         ],
         [
             'emoji' => '💸',
@@ -135,6 +136,35 @@ class Bootstrap
         [
             'emoji' => '🐝',
             'text' => 'Automated software testing is the bee\'s knees.'
+        ],
+        [
+            'emoji' => '🤯',
+            'text' => 'When your employer tells you to "embrace the chaos", ' .
+                      'it\'s a cover for their awful management style and ' .
+                      'company culture. Your lack of success in such a ' .
+                      'setting is not your own fault.'
+        ],
+        [
+            'emoji' => '❤️',
+            'text' => 'Don\'t abandon your real family for your job.'
+        ],
+        [
+            'emoji' => '🫠',
+            'text' => 'Perhaps your infrastructure scales, but does your ' .
+                      'company culture scale along with it?'
+        ],
+        [
+            'emoji' => '✨',
+            'text' => 'If all else fails, add more glitter.'
+        ],
+        [
+            'emoji' => '🔥',
+            'text' => 'Violence shouldn\'t be an occupational hazard.'
+        ],
+        [
+            'emoji' => '☂️',
+            'text' => 'Making sex work illegal doesn\'t make women\'s lives ' .
+                      'any safer.'
         ]
     ];
 
