@@ -13,6 +13,12 @@ In essence, it has the same purpose as the `install-wp-tests.sh` shell script in
 * The test environments are downloaded and configured automatically using your PHPUnit configuration file
 * No need to re-run a script to install a development environment with the same parameters after every time you restart your computer or development environment
 
+![A screenshot of WP-Tests-Strapon, showing the test suite being prepared and run](https://github.com/aldavigdis/wp-tests-strapon/blob/main/image.jpg?raw=true)
+
+## Usage
+
+WP-Tests-Strapon integrates with PHPUnit and acts as a bootstrap layer between your WordPress plugin's test suite. Simply run `./vendor/bin/phpunit` as you would generally do after following the installation instructions below.
+
 ## Installation
 
 As this in an early development version of this package that has not been uploaded to Packagist yet, you are going to need to add the Git repository manually to your `composer.json` file in order to use Alda's WP-Tests-Strapon.
