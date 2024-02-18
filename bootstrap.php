@@ -22,5 +22,6 @@ if (defined('WP_TESTS_CONFIG_FILE_PATH') === false) {
 Bootstrap::init(getenv('WP_VERSION'));
 
 require FetchWP::extractDirPath() . 'wordpress-develop-trunk/tests/phpunit/includes/functions.php';
-
+ob_start();
 require FetchWP::extractDirPath() . 'wordpress-develop-trunk/tests/phpunit/includes/bootstrap.php';
+ob_end_clean();
