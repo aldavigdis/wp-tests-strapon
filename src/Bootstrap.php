@@ -327,7 +327,7 @@ class Bootstrap
         int $min = self::MIN_TERMINAL_WIDTH,
         int $max = self::MAX_TERMINAL_WIDTH
     ): int {
-        if (getenv('TERM') === 'false') {
+        if (getenv('TERM') === '' || getenv('TERM') === false) {
             return self::DEFAULT_TERMINAL_WIDTH;
         }
 
