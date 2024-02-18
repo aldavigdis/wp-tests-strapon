@@ -10,7 +10,7 @@ use Ansi;
 
 class Bootstrap
 {
-    public const MIN_TERMINAL_WIDTH = 33;
+    public const MIN_TERMINAL_WIDTH = 30;
     public const MAX_TERMINAL_WIDTH = 120;
 
     public const INSPIRATIONS = [
@@ -182,6 +182,7 @@ class Bootstrap
 
     public static function init(string $wp_version)
     {
+        self::displayLogotype();
         self::displaySeparator();
 
         self::displayLine(
@@ -306,13 +307,13 @@ class Bootstrap
         $emoji_key = array_rand(self::QUEER_EMOJI);
         $emoji     = self::QUEER_EMOJI[$emoji_key];
 
-        echo "\n" .
+        echo PHP_EOL .
              Ansi::tagsToColors('<magenta>' . str_repeat('═', $halfwidth)) .
              Ansi::tagsToColors('<magenta>[') .
              '  ' . $emoji . '  ' .
              Ansi::tagsToColors('<magenta>]') .
              Ansi::tagsToColors('<magenta>' . str_repeat('═', $halfwidth)) .
-             "\n\n";
+             PHP_EOL . PHP_EOL;
     }
 
     public static function displayLine(string $text, ?string $emoji = null): void
@@ -322,8 +323,8 @@ class Bootstrap
         if (is_null($emoji) === true) {
             $emoji = "✅";
         }
-        $wrapped_text = wordwrap($text, $terminal_width, "\n\t", true);
-        echo "   $emoji\t$wrapped_text\n";
+        $wrapped_text = wordwrap($text, $terminal_width, PHP_EOL . "\t", true);
+        echo "  $emoji\t$wrapped_text" . PHP_EOL;
     }
 
     public static function displayInspiration(?object $inspo = null): void
@@ -332,6 +333,23 @@ class Bootstrap
             $inspo = self::pickInspiration();
         }
         self::displayLine($inspo->text, $inspo->emoji);
+    }
+
+    public static function displayLogotype(): void
+    {
+        $spaces = str_repeat(' ', intval((self::terminalWidth() / 2) - 14));
+
+        if (strlen($spaces) < 0) {
+            $spaces = ' ';
+        }
+
+        echo PHP_EOL;
+        echo Ansi::tagsToColors("$spaces<blue>__        ______ <magenta>_____ ____  " . PHP_EOL);
+        echo Ansi::tagsToColors("$spaces<blue>\ \      / /  _ \<magenta>_   _/ ___| " . PHP_EOL);
+        echo Ansi::tagsToColors("$spaces<blue> \ \ /\ / /| |_) |<magenta>| | \___ \ " . PHP_EOL);
+        echo Ansi::tagsToColors("$spaces<blue>  \ V  V / |  __/ <magenta>| |  ___) |" . PHP_EOL);
+        echo Ansi::tagsToColors("$spaces<blue>   \_/\_/  |_|    <magenta>|_| |____/ " . PHP_EOL);
+        echo PHP_EOL;
     }
 
     public static function pickInspiration(): object
