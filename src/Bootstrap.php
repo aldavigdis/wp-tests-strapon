@@ -332,8 +332,7 @@ class Bootstrap
             @exec(
                 command: 'powershell -command $Host.UI.RawUI.WindowSize.Width',
                 output: $output,
-                result_code:
-                $result_code
+                result_code: $result_code
             );
         } else {
             @exec(
