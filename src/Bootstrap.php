@@ -227,7 +227,7 @@ class Bootstrap
 
         if (FetchWP::isInstalled('develop-trunk', 'wordpress') === false) {
             self::displayLine(
-                'A WordPress develop-drunk environment was not found.',
+                'A WordPress develop-trunk environment was not found.',
                 '❓'
             );
 
