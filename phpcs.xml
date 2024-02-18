@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<ruleset name="WP-Tests-Strapon">
+	<rule ref="Generic.Files.OneObjectStructurePerFile.MultipleFound">
+		<exclude-pattern>./supressors/*</exclude-pattern>
+	</rule>
+</ruleset>

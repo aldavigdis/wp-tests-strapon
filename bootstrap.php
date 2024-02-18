@@ -2,6 +2,9 @@
 
 require 'vendor/autoload.php';
 
+require __DIR__ . '/supressors/SupressFramework.php';
+require __DIR__ . '/supressors/SupressFrameworkError.php';
+
 use Aldavigdis\WpTestsStrapon\Bootstrap;
 use Aldavigdis\WpTestsStrapon\FetchWP;
 
