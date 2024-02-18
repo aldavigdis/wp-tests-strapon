@@ -328,7 +328,20 @@ class Bootstrap
     ): int {
         $output = [];
         $result_code = 0;
-        @exec(command: 'tput cols', output: $output, result_code: $result_code);
+        if (PHP_OS === 'WINNT') {
+            @exec(
+                command: 'powershell -command $Host.UI.RawUI.WindowSize.Width',
+                output: $output,
+                result_code:
+                $result_code
+            );
+        } else {
+            @exec(
+                command: 'tput cols',
+                output: $output,
+                result_code: $result_code
+            );
+        }
 
         $width = intval($output[0]);
 
