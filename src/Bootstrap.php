@@ -190,6 +190,19 @@ class Bootstrap
             "Welcome to Alda's WP-Tests-Strapon Package!",
             '🌊'
         );
+
+        echo PHP_EOL;
+
+        self::displayLine(
+            'This software is published under the GNU Affero General Public ' .
+            'License v3.0 or later. The original source code is available at ' .
+            'https://github.com/aldavigdis/wp-tests-strapon. Please read the ' .
+            'included LICENSE file for more information.',
+            '⚖️'
+        );
+
+        echo PHP_EOL;
+
         self::displayLine(
             'Inspecting your WordPress test environment...',
             '👁️'
