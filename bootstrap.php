@@ -2,8 +2,12 @@
 
 require_once 'vendor/autoload.php';
 
-require __DIR__ . '/supressors/SupressFramework.php';
-require __DIR__ . '/supressors/SupressFrameworkError.php';
+# The WP test suite assumes the existence of classes that only exist in
+# version 9 and older of PHPUnit. This solves that.
+if ( 1 === version_compare( \PHPUnit\Runner\Version::id(), '10' ) ) {
+    require __DIR__ . '/supressors/SupressFramework.php';
+    require __DIR__ . '/supressors/SupressFrameworkError.php';
+}
 
 use Aldavigdis\WpTestsStrapon\Bootstrap;
 use Aldavigdis\WpTestsStrapon\FetchWP;
