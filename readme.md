@@ -21,23 +21,8 @@ WP-Tests-Strapon integrates with PHPUnit and acts as a bootstrap layer between y
 
 ## Installation
 
-As this in an early development version of this package that has not been uploaded to Packagist yet, you are going to need to add the Git repository manually to your `composer.json` file in order to use Alda's WP-Tests-Strapon.
-
-For the time being, you also need to set the `"minimum-stability"` attribute in your `composer.json` file to `"dev"`. (Yup, this may not be quite ready for production use, but it will change once the 0.1 release is out.)
-
-Example:
-
-```json
-{
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/aldavigdis/wp-tests-strapon.git"
-        }
-    ],
-    "minimum-stability": "dev"
-}
-```
+1. Make sure you have version 9 or 10 of PHPUnit installed as a development dependency for your project.
+2. Install the Composer package using `composer require --dev aldavigdis/wp-tests-strapon`.
 
 Finally, Open up your PHPUnit configuration file (`phpunit.xml` or `phpunit.xml.dist`) and set the `bootstrap` attribute of the root `<phpunit>` element to `vendor/aldavigdis/wp-tests-strapon/bootstrap.php`.
 
