@@ -1,0 +1,60 @@
+name: CI
+on: [push]
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    services:
+      mariadb:
+        image: mariadb:latest
+        ports: ["3306:3306"]
+        env:
+          MARIADB_USER: test
+          MARIADB_PASSWORD: password
+          MARIADB_ROOT_PASSWORD: password
+          MARIADB_DATABASE : wp-test
+        options: --health-cmd="healthcheck.sh --connect --innodb_initialized" --health-interval=10s --health-timeout=5s --health-retries=10
+    strategy:
+      matrix:
+        php-versions: ['8.2', '8.3', '8.4']
+        wp-versions: ['master', '6.4.3', '6.3.3', '6.2.4', '6.1.5']
+    env:
+      DB_NAME: 'wp-test'
+      DB_HOST: '127.0.0.1'
+      DB_USER: root
+      DB_PASSWORD: password
+      XDEBUG_MODE: coverage
+      extensions: bcmath
+      key: cache-v1.1
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Setup cache environment
+      id: extcache
+      uses: shivammathur/cache-extensions@v1
+      with:
+        php-version: ${{ matrix.php-versions }}
+        extensions: ${{ env.extensions }}
+        key: ${{ env.key }}
+    - name: Cache extensions
+      uses: actions/cache@v4
+      with:
+        path: ${{ steps.extcache.outputs.dir }}
+        key: ${{ steps.extcache.outputs.key }}
+        restore-keys: ${{ steps.extcache.outputs.key }}
+    - name: "Set up PHP ${{ matrix.php-versions }}"
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-versions }}
+        extensions: bcmath
+        coverage: xdebug
+        tools: phpcs, phpunit
+    - name: Install dependencies
+      run: composer install --no-cache
+    - name: Figure out the PSR-4 autoload situation
+      run: composer dump-autoload -o --strict-psr
+    - name: PHPCS
+      run: composer lint:check
+    - name: PHPUnit
+      env:
+        WP_VERSION: ${{ matrix.wp-versions }}
+      run: composer test
