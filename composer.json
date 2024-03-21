@@ -1,7 +1,7 @@
 {
     "name": "aldavigdis/wp-tests-strapon",
     "description": "Strap the WordPress PHPUnit tests library onto your plugin or theme with this handy Composer package.",
-    "version": "0.1.4",
+    "version": "0.1.5",
     "type": "library",
     "license": "AGPL-3.0-or-later",
     "keywords": ["wordpress", "phpunit", "testing", "dev"],
