@@ -1,6 +1,46 @@
 <?xml version="1.0"?>
 <ruleset name="WP-Tests-Strapon">
-	<rule ref="Generic.Files.OneObjectStructurePerFile.MultipleFound">
-		<exclude-pattern>./supressors/*</exclude-pattern>
+
+	<rule ref="PHPCompatibility">
 	</rule>
+	<config name="testVersion" value="8.2-"/>
+
+	<!-- Enforce strict type decleration at top of all PHP files -->
+	<rule ref="SlevomatCodingStandard.TypeHints.DeclareStrictTypes">
+		<properties>
+			<property name="spacesCountAroundEqualsSign" value="0" />
+			<property name="linesCountBeforeDeclare" value="1" />
+			<property name="linesCountAfterDeclare" value="1" />
+		</properties>
+	</rule>
+
+		<!-- Enforce type hinting for function parameters -->
+	<rule ref="SlevomatCodingStandard.TypeHints.ParameterTypeHint">
+	</rule>
+
+	<!-- Enforce type hinting for function return values -->
+	<rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHint">
+	</rule>
+
+	<!-- Disallow "sloppy" equals operators -->
+	<rule ref="SlevomatCodingStandard.Operators.DisallowEqualOperators">
+	</rule>
+
+	<!--
+	Exclude the vendor direcotry because of course
+	-->
+	<exclude-pattern>./vendor/*</exclude-pattern>
+
+	<!--
+	Excluding commenting rules from tests, as we are using TestDox instead
+	-->
+	<rule ref="Squiz.Commenting.ClassComment.Missing">
+		<exclude-pattern>./tests/**</exclude-pattern>
+		<exclude-pattern>./supressors/**</exclude-pattern>
+	</rule>
+	<rule ref="Squiz.Commenting.FunctionComment.Missing">
+		<exclude-pattern>./tests/**</exclude-pattern>
+		<exclude-pattern>./supressors/**</exclude-pattern>
+	</rule>
+
 </ruleset>

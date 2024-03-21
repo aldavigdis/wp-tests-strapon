@@ -6,8 +6,12 @@ namespace Aldavigdis\WpTestsStrapon;
 
 use Aldavigdis\WpTestsStrapon\FetchWP;
 use Aldavigdis\WpTestsStrapon\Config;
+use Aldavigdis\WpTestsStrapon\Database;
 use Ansi;
 
+/**
+ * Bootstrap is a class used for running what happens in the bootstrap.php file
+ */
 class Bootstrap
 {
     public const MIN_TERMINAL_WIDTH = 30;
@@ -181,7 +185,13 @@ class Bootstrap
                                 '🩷', '🦩', '💖', '✨', '💗', '🎀', '🩰',
                                 '👠', '💄', '💅', '💍', '🐻'];
 
-    public static function init(string $wp_version)
+    /**
+     * Initialise the bootstrap sequence for a specific WordPress version
+     *
+     * This fetches the relevant WP version and runs all the colourful
+     * functionality of wp-tests-bootstrap.
+     */
+    public static function init(string $wp_version): void
     {
         self::displayLogotype();
         self::displaySeparator();
@@ -219,9 +229,22 @@ class Bootstrap
 
             $config = new Config(wp_version: $wp_version);
 
-            if ($config->testDatabaseConnection() === true) {
+            if ($config->save() === true) {
+                $path = Config::path();
+                self::displayLine("A fresh config was saved to '$path'.");
+                echo PHP_EOL;
+            }
+
+            if (
+                Database::testConnection(
+                    $config->db_host,
+                    $config->db_user,
+                    $config->db_password,
+                    $config->db_name
+                ) === true
+            ) {
                 self::displayLine(
-                    'Connection to the database was successful.'
+                    'Connection to the database server was successful.'
                 );
             } else {
                 self::displayLine(
@@ -230,28 +253,39 @@ class Bootstrap
                     'and correct.',
                     '👎'
                 );
-                echo PHP_EOL;
             }
 
-            if ($config->save() === true) {
-                $path = Config::path();
-                self::displayLine("A fresh config was saved to '$path'.");
+            if (
+                Database::exsists(
+                    $config->db_host,
+                    $config->db_user,
+                    $config->db_password,
+                    $config->db_name
+                ) === true
+            ) {
                 self::displayLine(
-                    'The configuration parameters in the config file are ' .
-                    'based on environment variables.',
-                    '🖖'
+                    "The '$config->db_name' database exsists."
                 );
+            } else {
                 self::displayLine(
-                    "You can set those in your 'phpunit.xml', in your " .
-                    'terminal etc.',
-                    '⌨️'
+                    "The '$config->db_name' database does not exist." .
+                    'Attempting to create it...',
+                    '😰'
                 );
-                self::displayLine(
-                    'Read all about it in the WP-Tests-Strapon readme file.',
-                    '📃'
-                );
-                echo PHP_EOL;
+                if (
+                    Database::create(
+                        $config->db_host,
+                        $config->db_user,
+                        $config->db_password,
+                        $config->db_name
+                    ) === true
+                ) {
+                    self::displayLine('The database was created.');
+                }
             }
+
+            echo PHP_EOL;
+
         }
 
         if (FetchWP::isInstalled('develop-trunk', 'wordpress') === false) {
@@ -352,6 +386,12 @@ class Bootstrap
         self::displaySeparator();
     }
 
+    /**
+     * Get the width for the current terminal
+     *
+     * @param int $min The minimum terminal width.
+     * @param int $max The maximum terminal width.
+     */
     public static function terminalWidth(
         int $min = self::MIN_TERMINAL_WIDTH,
         int $max = self::MAX_TERMINAL_WIDTH
@@ -394,6 +434,9 @@ class Bootstrap
         return $width;
     }
 
+    /**
+     * Display a horizontal separator with a pretty emoji in the middle
+     */
     public static function displaySeparator(): void
     {
         $halfwidth = intval((self::terminalWidth() / 2) - 4);
@@ -410,17 +453,23 @@ class Bootstrap
              PHP_EOL . PHP_EOL;
     }
 
-    public static function displayLine(string $text, ?string $emoji = null): void
+    /**
+     * Display a line of text that starts with a pretty emoji
+     *
+     * Displays a line of text that wraps down according to the current terminal
+     * size. Each line starts with an emoji, which defaults to a green tick.
+     */
+    public static function displayLine(string $text, string $emoji = '✅'): void
     {
         $terminal_width = self::terminalWidth() - 10;
 
-        if (is_null($emoji) === true) {
-            $emoji = "✅";
-        }
         $wrapped_text = wordwrap($text, $terminal_width, PHP_EOL . "\t", true);
         echo "  $emoji\t$wrapped_text" . PHP_EOL;
     }
 
+    /**
+     * Display a line of propaganda
+     */
     public static function displayInspiration(?object $inspo = null): void
     {
         if (is_null($inspo) === true) {
@@ -429,6 +478,9 @@ class Bootstrap
         self::displayLine($inspo->text, $inspo->emoji);
     }
 
+    /**
+     * Display the WPTS (wp-tests-strapon) logotype as ANSI/ACII art
+     */
     public static function displayLogotype(): void
     {
         $spaces = str_repeat(' ', intval((self::terminalWidth() / 2) - 14));
@@ -446,13 +498,19 @@ class Bootstrap
         echo PHP_EOL;
     }
 
+    /**
+     * Pick a random line of propaganda
+     */
     public static function pickInspiration(): object
     {
         $key = array_rand(self::INSPIRATIONS);
         return (object) self::INSPIRATIONS[$key];
     }
 
-    public static function configExsists()
+    /**
+     * Check if the test config file exsists
+     */
+    public static function configExsists(): bool
     {
         $path = Config::path();
 
