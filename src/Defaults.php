@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Aldavigdis\WpTestsStrapon;
 
+/**
+ * The Defaults class contains the default values for the test configuration file
+ */
 class Defaults
 {
     public const WP_VERSION = 'master';

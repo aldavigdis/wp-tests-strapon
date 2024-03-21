@@ -6,6 +6,10 @@ namespace Aldavigdis\WpTestsStrapon;
 
 use ZipArchive;
 
+/**
+ * FetchWP is a class for fetching WordPress archives from Github and extracting
+ * them in a location that can be used by wp-tests-strapon
+ */
 class FetchWP
 {
     public const WP_VENDOR_BASE_PATH = 'vendor/wordpress/wordpress/';
@@ -20,6 +24,9 @@ class FetchWP
 
     public const DEFAULT_WP_VERSION = 'master';
 
+    /**
+     * Get a full url to a WordPress zip archive on Github
+     */
     public static function archiveUrl(
         string $wp_version = self::DEFAULT_WP_VERSION,
         string $base_url = self::WP_DIST_BASE_URL
@@ -31,11 +38,20 @@ class FetchWP
         return $base_url . $wp_version . '.zip';
     }
 
+    /**
+     * Get the base directory for the test environment
+     *
+     * This usually starts with /tmp on Linux, but MacOS and Windows use a
+     * different temp directory per user that needs to be accounted for.
+     */
     public static function extractDirPath(): string
     {
         return sys_get_temp_dir() . '/' . 'wp-tests-strapon/';
     }
 
+    /**
+     * Get a full path to a WordPress test environment
+     */
     public static function wpInstallationPath(
         string $wp_version = 'master',
         string $basename = 'WordPress'
@@ -43,11 +59,23 @@ class FetchWP
         return self::extractDirPath() . $basename . '-' . $wp_version . '/';
     }
 
+    /**
+     * Generate a unique file path for a zip archive
+     */
     public static function archiveFilePath(): string
     {
         return sys_get_temp_dir() . '/' . uniqid() . '.zip';
     }
 
+    /**
+     * Download a zip archive from Github
+     *
+     * @param string $wp_version The WordPress version string.
+     * @param string $base_url   The base URL (sans the version string) for the archive.
+     *
+     * @return string|false The file path to the downloaded archive on success,
+     *                      false on failure.
+     */
     public static function downloadArchive(
         string $wp_version = 'master',
         string $base_url = self::WP_DIST_BASE_URL
@@ -74,6 +102,14 @@ class FetchWP
         return $file_path;
     }
 
+    /**
+     * Extract downloaded zip archive
+     *
+     * @param string $archive_file_path The path to the zip file
+     * @param bool   $delete            Delete the zip file if true
+     *
+     * @return bool True on success, false on failure.
+     */
     public static function extractArchive(
         string $archive_file_path,
         bool $delete = true
@@ -84,7 +120,6 @@ class FetchWP
 
         $zip = new ZipArchive();
         if ($zip->open($archive_file_path) !== true) {
-            echo "Hmm\n";
             return false;
         }
         if ($zip->extractTo(self::extractDirPath()) === false) {
@@ -99,6 +134,18 @@ class FetchWP
         return true;
     }
 
+    /**
+     * Check if a test environment has been installed
+     *
+     * @param string $wp_version The WordPress version for the environment
+     * @param string $basename   The "base name" if the environment. This is
+     *                           usually WordPress for most versions, but
+     *                           wordpress for the unbuilt version of WP as they
+     *                           come from different repositories with different
+     *                           standards.
+     *
+     * @return bool True if the environment is installed, false if it isn't.
+     */
     public static function isInstalled(
         string $wp_version,
         string $basename = 'WordPress'

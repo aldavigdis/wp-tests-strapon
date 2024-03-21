@@ -6,8 +6,17 @@ namespace Aldavigdis\WpTestsStrapon;
 
 use Aldavigdis\WpTestsStrapon\Defaults;
 use Aldavigdis\WpTestsStrapon\FetchWP;
-use mysqli;
+use Throwable;
 
+/**
+ * The Config class creates a WordPress test configuration file
+ *
+ * This is essentially similar as wp-config.php but specific to testing in
+ * PHPUnit. The default values are set in the Defaults class and are overwritten
+ * using environment variables of the same name.
+ *
+ * @see Aldavigdis\WpTestsStrapon\Defaults
+ */
 class Config
 {
     public string $config_contents;
@@ -18,6 +27,12 @@ class Config
     public string $db_password;
     public string $db_host;
 
+    /**
+     * The Config constructor
+     *
+     * Sets the values of the test config file to be generated. The defaults for
+     * each are overwritten using environment variables of the same name.
+     */
     public function __construct(
         string $wp_version = Defaults::WP_VERSION,
         string $wp_default_theme = Defaults::WP_DEFAULT_THEME,
@@ -131,6 +146,12 @@ class Config
         );
     }
 
+    /**
+     * Get the path of the test configuration file
+     *
+     * On Linux, the file may usually end up in /tmp/wp-tests-strapon/ but for
+     * Windows and MacOS, each user has their own temporary directory.
+     */
     public static function path(): string
     {
         if (defined('WP_TESTS_CONFIG_FILE_PATH') === true) {
@@ -140,65 +161,59 @@ class Config
         return sys_get_temp_dir() . "/wp-tests-strapon/config.php";
     }
 
-    public function save()
+    /**
+     * Save the test configuration file
+     *
+     * @return bool True on success, false on failure.
+     */
+    public function save(): bool
     {
         if (is_dir(dirname(self::path())) === false) {
             mkdir(dirname(self::path()));
         }
 
         $file = fopen(self::path(), 'w');
-        if (fwrite($file, rtrim($this->config_contents) . "\n")) {
+        if (fwrite($file, rtrim($this->config_contents) . PHP_EOL)) {
             return true;
         }
 
         return false;
     }
 
-    public function testDatabaseConnection()
-    {
-        try {
-            $connection = mysqli_connect(
-                hostname: $this->db_host,
-                username: $this->db_user,
-                password: $this->db_password,
-                database: $this->db_name
-            );
-        } catch (\Throwable $th) {
-            return false;
-        }
-
-        if ($connection !== false) {
-            return true;
-        }
-
-        return false;
-    }
-
-    private function formatComment(string $comment)
+    /**
+     * Format a comment block for the configuration file
+     */
+    private function formatComment(string $comment): string
     {
         $comment_lines = explode(PHP_EOL, $comment);
         $entity = '';
         if (is_string($comment)) {
-            $entity .= '/**' . "\n";
+            $entity .= '/**' . PHP_EOL;
             foreach ($comment_lines as $c) {
                 $trimmed_comment = trim($c);
                 $entity .= ' *';
                 if (empty($trimmed_comment) === false) {
                     $entity .= ' ' . $trimmed_comment;
                 }
-                $entity .= "\n";
+                $entity .= PHP_EOL;
             }
-            $entity .= ' **/' . "\n";
+            $entity .= ' **/' . PHP_EOL;
         }
         return $entity;
     }
 
-    private function cleanName(string $name)
+    /**
+     * Clean and strip a variable or constant name
+     */
+    private function cleanName(string $name): string
     {
         return trim(addslashes(str_replace([' ', '\''], '_', $name)));
     }
 
-    private function cleanValue(string|bool $value)
+    /**
+     * Clean and strip a variable or contant value
+     */
+    private function cleanValue(string|bool $value): string
     {
         if (is_bool($value) === true) {
             if ($value === true) {
@@ -210,11 +225,14 @@ class Config
         return '\'' . trim(addslashes($value)) . '\'';
     }
 
+    /**
+     * Format a PHP constant declaration in the config file
+     */
     private function formatConstant(
         string $name,
         bool|string $value,
         ?string $comment = null
-    ) {
+    ): string {
         $clean_name  = $this->cleanName($name);
         $clean_value = $this->cleanValue($value);
 
@@ -227,11 +245,14 @@ class Config
         return $entity;
     }
 
+    /**
+     * Format a variable decleation in the config file
+     */
     private function formatVariable(
         string $name,
         string $value,
         ?string $comment = null
-    ) {
+    ): string {
         $clean_name  = $this->cleanName($name);
         $clean_value = $this->cleanValue($value);
 

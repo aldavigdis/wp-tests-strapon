@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 require_once 'vendor/autoload.php';
 
 # The WP test suite assumes the existence of classes that only exist in
