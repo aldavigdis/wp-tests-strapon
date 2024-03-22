@@ -220,73 +220,68 @@ class Bootstrap
 
         echo PHP_EOL;
 
-        if (self::configExsists() === false) {
-            self::displayLine(
-                'A test config file for the WordPress test environment was ' .
-                'not found.',
-                '👀'
-            );
-
-            $config = new Config(wp_version: $wp_version);
-
-            if ($config->save() === true) {
-                $path = Config::path();
-                self::displayLine("A fresh config was saved to '$path'.");
-                echo PHP_EOL;
-            }
-
-            if (
-                Database::testConnection(
-                    $config->db_host,
-                    $config->db_user,
-                    $config->db_password,
-                    $config->db_name
-                ) === true
-            ) {
-                self::displayLine(
-                    'Connection to the database server was successful.'
-                );
-            } else {
-                self::displayLine(
-                    'Unable to connect to the database. Check if the ' .
-                    'database name, hostname, username or password are valid ' .
-                    'and correct.',
-                    '👎'
-                );
-            }
-
-            if (
-                Database::exsists(
-                    $config->db_host,
-                    $config->db_user,
-                    $config->db_password,
-                    $config->db_name
-                ) === true
-            ) {
-                self::displayLine(
-                    "The '$config->db_name' database exsists."
-                );
-            } else {
-                self::displayLine(
-                    "The '$config->db_name' database does not exist." .
-                    'Attempting to create it...',
-                    '😰'
-                );
-                if (
-                    Database::create(
-                        $config->db_host,
-                        $config->db_user,
-                        $config->db_password,
-                        $config->db_name
-                    ) === true
-                ) {
-                    self::displayLine('The database was created.');
-                }
-            }
-
-            echo PHP_EOL;
-
+        if (self::configExsists() === true) {
+            self::displayLine('Dropping the older config file.', '♻️');
         }
+
+        $config = new Config(wp_version: $wp_version);
+
+        if ($config->save() === true) {
+            $path = Config::path();
+            self::displayLine("A fresh config was saved to '$path'.");
+            echo PHP_EOL;
+        }
+
+        if (
+            Database::testConnection(
+                $config->db_host,
+                $config->db_user,
+                $config->db_password,
+                $config->db_name
+            ) === true
+        ) {
+            self::displayLine(
+                'Connection to the database server was successful.'
+            );
+        } else {
+            self::displayLine(
+                'Unable to connect to the database. Check if the ' .
+                'database name, hostname, username or password are valid ' .
+                'and correct.',
+                '👎'
+            );
+        }
+
+        if (
+            Database::exsists(
+                $config->db_host,
+                $config->db_user,
+                $config->db_password,
+                $config->db_name
+            ) === true
+        ) {
+            self::displayLine(
+                "The '$config->db_name' database exsists."
+            );
+        } else {
+            self::displayLine(
+                "The '$config->db_name' database does not exist." .
+                'Attempting to create it...',
+                '😰'
+            );
+            if (
+                Database::create(
+                    $config->db_host,
+                    $config->db_user,
+                    $config->db_password,
+                    $config->db_name
+                ) === true
+            ) {
+                self::displayLine('The database was created.');
+            }
+        }
+
+        echo PHP_EOL;
 
         if (FetchWP::isInstalled('develop-trunk', 'wordpress') === false) {
             self::displayLine(

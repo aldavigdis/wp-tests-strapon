@@ -181,6 +181,14 @@ class Config
     }
 
     /**
+     * Delete the config file
+     */
+    public function drop(): bool
+    {
+        return unlink(self::path());
+    }
+
+    /**
      * Format a comment block for the configuration file
      */
     private function formatComment(string $comment): string
