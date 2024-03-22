@@ -384,6 +384,14 @@ class Bootstrap
         self::displayLine('Bye!', '👋');
 
         self::displaySeparator();
+
+        require FetchWP::extractDirPath() .
+        'wordpress-develop-trunk/tests/phpunit/includes/functions.php';
+
+        ob_start();
+        require FetchWP::extractDirPath() .
+        'wordpress-develop-trunk/tests/phpunit/includes/bootstrap.php';
+        ob_end_clean();
     }
 
     /**
