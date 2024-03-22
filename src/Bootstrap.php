@@ -384,7 +384,14 @@ class Bootstrap
         self::displayLine('Bye!', '👋');
 
         self::displaySeparator();
+    }
 
+    /**
+     * Require the WP test environment
+     *
+     * This enables us to use WordPress' built-in functions in our tests.
+     */
+    public static function requireWordPressTestEnv(): void {
         require FetchWP::extractDirPath() .
         'wordpress-develop-trunk/tests/phpunit/includes/functions.php';
 

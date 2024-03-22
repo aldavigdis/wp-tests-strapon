@@ -12,3 +12,4 @@ SetEnv::setWpVersion();
 SetEnv::setConfigFilePath();
 
 Bootstrap::init(getenv('WP_VERSION'));
+Bootstrap::requireWordPressTestEnv();
