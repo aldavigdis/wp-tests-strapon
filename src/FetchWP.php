@@ -16,7 +16,7 @@ class FetchWP
 
     public const WP_DEV_BASE_URL = 'https://github.com/WordPress/wordpress-develop/archive/refs/heads/';
 
-    public const DEFAULT_WP_DEV_BASE_VERSION = 'trunk';
+    public const DEFAULT_WP_DEV_BASE_VERSION = '6.7.1';
 
     public const WP_DIST_BASE_URL = 'https://github.com/WordPress/WordPress/archive/refs/tags/';
 
