@@ -31,7 +31,7 @@ class SetEnv {
      */
     public static function setWpVersion(): void {
         if (getenv('WP_VERSION') === false) {
-           putenv('WP_VERSION=master');
+           putenv('WP_VERSION=' . Defaults::WP_VERSION);
         }
     }
 

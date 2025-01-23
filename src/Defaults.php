@@ -9,7 +9,7 @@ namespace Aldavigdis\WpTestsStrapon;
  */
 class Defaults
 {
-    public const WP_VERSION = 'master';
+    public const WP_VERSION = '6.7.1';
     public const WP_DEFAULT_THEME = 'default';
     public const WP_TESTS_MULTISITE = false;
     public const WP_DEBUG = true;
