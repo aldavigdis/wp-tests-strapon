@@ -283,28 +283,29 @@ class Bootstrap
 
         echo PHP_EOL;
 
-        if (FetchWP::isInstalled('develop-trunk', 'wordpress') === false) {
+        if (! FetchWP::isInstalled(
+            'develop-' . FetchWP::wpDevelopVersion($wp_version),
+            'wordpress'
+            )
+        ) {
             self::displayLine(
-                'A WordPress develop-trunk environment was not found.',
+                "A WordPress develop-$wp_version environment was not found.",
                 '❓'
             );
 
             self::displayLine(
-                'Downloading and installing the WordPress-develop-trunk ' .
-                'environment...',
+                'Downloading and installing the WordPress-develop-' .
+                "$wp_version environment...",
                 '💻'
             );
 
-            $trunk_file_path = FetchWP::downloadArchive(
-                FetchWP::DEFAULT_WP_DEV_BASE_VERSION,
-                FetchWP::WP_DEV_BASE_URL
-            );
+            $trunk_file_path = FetchWP::downloadArchive($wp_version, 'develop');
 
             if (is_string($trunk_file_path) === true) {
                 self::displayLine('Done!');
             } else {
                 self::displayLine(
-                    'Sorry! Could not download this WordPress-develop-trunk.',
+                    "Sorry! Could not download this WordPress-develop-$wp_version.",
                     '👎'
                 ) ;
                 die;
@@ -386,13 +387,13 @@ class Bootstrap
      *
      * This enables us to use WordPress' built-in functions in our tests.
      */
-    public static function requireWordPressTestEnv(): void {
+    public static function requireWordPressTestEnv(string $wp_version): void {
         require FetchWP::extractDirPath() .
-        'wordpress-develop-trunk/tests/phpunit/includes/functions.php';
+        "wordpress-develop-$wp_version/tests/phpunit/includes/functions.php";
 
         ob_start();
         require FetchWP::extractDirPath() .
-        'wordpress-develop-trunk/tests/phpunit/includes/bootstrap.php';
+        "wordpress-develop-$wp_version/tests/phpunit/includes/bootstrap.php";
         ob_end_clean();
     }
 

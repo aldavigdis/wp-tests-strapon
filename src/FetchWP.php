@@ -14,7 +14,9 @@ class FetchWP
 {
     public const WP_VENDOR_BASE_PATH = 'vendor/wordpress/wordpress/';
 
-    public const WP_DEV_BASE_URL = 'https://github.com/WordPress/wordpress-develop/archive/refs/heads/';
+    public const WP_DEV_BASE_URL = 'https://github.com/WordPress/wordpress-develop/archive/refs/tags/';
+
+    public const WP_DEV_TRUNK_URL = 'https://github.com/WordPress/wordpress-develop/archive/refs/heads/trunk.zip';
 
     public const DEFAULT_WP_DEV_BASE_VERSION = 'trunk';
 
@@ -22,20 +24,39 @@ class FetchWP
 
     public const WP_DIST_URL = 'https://github.com/WordPress/WordPress/archive/refs/heads/master.zip';
 
-    public const DEFAULT_WP_VERSION = 'master';
+    /**
+     * Get a full url to a wordpress-develop zip archive on Github
+     */
+    public static function wpDevelopArchiveUrl(string $wp_version): string {
+        return self::WP_DEV_BASE_URL . self::wpDevelopVersion($wp_version) . '.zip';
+    }
+
+    /**
+     * Get the wordpress-develop version number from a "dist" version number
+     *
+     * Wordpress-develop uses a zero for the 3rd component of the version
+     * number on Github, while the "dist" skips it.
+     *
+     * In short, this translates the "dist" version number such as 6.5 over to
+     * 6.5.0.
+     */
+    public static function wpDevelopVersion(string $wp_version): string {
+        $wp_version_components = explode('.', $wp_version);
+
+        if ( sizeof($wp_version_components) === 2 ) {
+            array_push($wp_version_components, '0');
+        }
+
+        return (string) implode('.', $wp_version_components);
+    }
 
     /**
      * Get a full url to a WordPress zip archive on Github
      */
     public static function archiveUrl(
-        string $wp_version = self::DEFAULT_WP_VERSION,
-        string $base_url = self::WP_DIST_BASE_URL
+        string $wp_version = Defaults::WP_VERSION
     ): string {
-        if ($wp_version === 'master') {
-            return self::WP_DIST_URL;
-        }
-
-        return $base_url . $wp_version . '.zip';
+        return self::WP_DIST_BASE_URL . $wp_version . '.zip';
     }
 
     /**
@@ -53,7 +74,7 @@ class FetchWP
      * Get a full path to a WordPress test environment
      */
     public static function wpInstallationPath(
-        string $wp_version = 'master',
+        string $wp_version = Defaults::WP_VERSION,
         string $basename = 'WordPress'
     ): string {
         return self::extractDirPath() . $basename . '-' . $wp_version . '/';
@@ -77,13 +98,20 @@ class FetchWP
      *                      false on failure.
      */
     public static function downloadArchive(
-        string $wp_version = 'master',
-        string $base_url = self::WP_DIST_BASE_URL
+        string $wp_version = Defaults::WP_VERSION,
+        string $type = 'dist'
     ): string|false {
+        switch ($type) {
+            case 'develop':
+                $url = self::wpDevelopArchiveUrl($wp_version);
+                break;
+            default:
+                $url = self::archiveUrl($wp_version);
+        }
         $file_path = self::archiveFilePath();
         $curl      = curl_init();
 
-        curl_setopt($curl, CURLOPT_URL, self::archiveUrl($wp_version, $base_url));
+        curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
