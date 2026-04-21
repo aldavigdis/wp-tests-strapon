@@ -24,10 +24,15 @@ class FetchWP
 
     public const WP_DIST_URL = 'https://github.com/WordPress/WordPress/archive/refs/heads/master.zip';
 
+    public const TRUNK_BRANCHES = array('main', 'master', 'trunk');
+
     /**
      * Get a full url to a wordpress-develop zip archive on Github
      */
     public static function wpDevelopArchiveUrl(string $wp_version): string {
+        if ( in_array($wp_version, self::TRUNK_BRANCHES) ) {
+            return self::WP_DEV_TRUNK_URL;
+        }
         return self::WP_DEV_BASE_URL . self::wpDevelopVersion($wp_version) . '.zip';
     }
 
@@ -56,6 +61,9 @@ class FetchWP
     public static function archiveUrl(
         string $wp_version = Defaults::WP_VERSION
     ): string {
+        if ( in_array($wp_version, self::TRUNK_BRANCHES) ) {
+            return self::WP_DIST_URL;
+        }
         return self::WP_DIST_BASE_URL . $wp_version . '.zip';
     }
 
